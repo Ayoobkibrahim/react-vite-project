@@ -53,11 +53,19 @@ jobs:
         docker build -t ${{ secrets.DOCKER_USERNAME }}/react-vite-app:build-${{ github.run_number }} .
         docker push ${{ secrets.DOCKER_USERNAME }}/react-vite-app:build-${{ github.run_number }}
 
+    - name: Setup Helm
+      uses: azure/setup-helm@v4
+    
+    - name: Package Helm Chart
+      run: |
+        mkdir -p helm-packages
+        helm dependency update helm/react-vite || true
+        helm package helm/react-vite --destination helm-packages
+
     - name: Upload build artifact
       uses: actions/upload-artifact@v4
       with:
-        name: react-vite-project
-        path: dist
-        if-no-files-found: error
+        name: helm-package
+        path: helm-packages/*.tgz
 
 

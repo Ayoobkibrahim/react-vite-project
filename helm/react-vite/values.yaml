@@ -1,0 +1,21 @@
+replicaCount: 1
+
+image:
+  repository: ayoobki/react-vite-app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+containerPort: 80
+
+service:
+  type: NodePort
+  port: 80
+
+ingress:
+  enabled: false
+  className: nginx
+  hosts:
+    - host: react-vite.local
+      paths:
+        - path: /
+          pathType: Prefix
