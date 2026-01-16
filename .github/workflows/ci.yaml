@@ -40,12 +40,7 @@ jobs:
           -Dsonar.projectKey=Ayoobkibrahim_react-vite-project
           -Dsonar.sources=src 
           -Dsonar.exclusions=**/node_modules/**,**/dist/**
-
-    - name: SonarCloud Quality Gate
-      uses: SonarSource/sonarcloud-quality-gate-action@v1.1.0
-      timeout-minutes: 5
-      env: 
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          -Dsonar.qualitygate.wait=true
 
     - name: Docker Build verify 
       run: docker build -t react-vite-app .
