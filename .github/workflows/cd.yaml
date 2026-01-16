@@ -16,12 +16,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download Helm package
-        uses: actions/download-artifact@v4
-        with:
-          name: helm-package
-          path: helm-packages
-          run-id: ${{ github.event.workflow_run.id }}
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup Kubectl
         uses: azure/setup-Kubectl@v3
