@@ -56,6 +56,9 @@ jobs:
     - name: Setup Helm
       uses: azure/setup-helm@v4
     
+    - name:
+      run: helm lint helm/react-vite
+    
     - name: Package Helm Chart
       run: |
         mkdir -p helm-packages
