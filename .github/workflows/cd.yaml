@@ -1,0 +1,39 @@
+name: CD Pipeline
+
+on:
+  workflow_run:
+    workflows: ["CI Pipeline"]
+    types:
+      - completed
+
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Helm package
+        uses: actions/download-artifact@v4
+        with:
+          name: helm-package
+          path: helm-packages
+
+      - name: Setup Kubectl
+        uses: azure/setup-Kubectl@v3
+      
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+
+      - name: Configure kubeconfig
+        run: |
+          echo "${{ secrets.KUBECONFIG_DATA }}" | base64 -d > kubeconfig
+          export KUBECONFIG=$PWD/kubeconfig
+      
+      - name: Verify cluster access
+        run: kubectl get nodes
+      
+      - name: Deploy with Helm
+        run: |
+          helm upgrade --install react-vite helm-packages/*.tgz \
+            --set image.tag=build-${{ github.run_number }}
