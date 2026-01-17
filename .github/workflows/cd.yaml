@@ -60,7 +60,7 @@ on:
 jobs:
   cd:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    uses: Ayookibrahim/react-cicd-templates/.github/workflows/reusable-cd.yml@main
+    uses:  Ayookibrahim/react-cicd-templates/.github/workflows/reusable-cd.yaml@main
     with:
       image_tag: build-${{ github.event.workflow_run.run_number }}
       release_name: react-vite
