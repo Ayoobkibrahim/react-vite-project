@@ -69,7 +69,3 @@ jobs:
         name: helm-package
         path: helm-packages/*.tgz
 
-  deploy:
-    needs: build
-    uses: ./.github/workflows/cd.yaml@main
-
