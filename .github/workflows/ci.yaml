@@ -71,4 +71,5 @@ jobs:
 
   deploy:
     needs: build
-    uses: .github/workflows/cd.yaml
+    uses: ./.github/workflows/cd.yaml@main
+
