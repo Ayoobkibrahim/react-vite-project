@@ -16,6 +16,9 @@ jobs:
     runs-on: self-hosted
 
     steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
       
       - name: Download Helm artifact
         uses: actions/download-artifact@v4
@@ -40,4 +43,4 @@ jobs:
       - name: Deploy with Helm
         run: |
           helm upgrade --install react-vite helm-packages/*.tgz \
-            --set image.tag=build-${{ github.run_number }}
+            --set image.tag=build-${{ github.event.workflow_run.run_number }}
