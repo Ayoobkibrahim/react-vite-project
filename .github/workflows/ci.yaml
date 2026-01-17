@@ -63,9 +63,14 @@ jobs:
         helm dependency update helm/react-vite || true
         helm package helm/react-vite --destination helm-packages
 
-    - name: Upload build artifact
+    - name: Upload Helm Package
       uses: actions/upload-artifact@v4
       with:
         name: helm-package
         path: helm-packages/*.tgz
 
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: react-vite-dist
+        path: dist
