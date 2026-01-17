@@ -81,7 +81,7 @@ on:
 
 jobs:
   ci:
-    uses: ayoob-org/react-cicd-templates/.github/workflows/reusable-ci.yml@main
+    uses: Ayookibrahim/react-cicd-templates/.github/workflows/reusable-ci.yml@main
     with:
       app_path: app
       image_name: react-vite-app
