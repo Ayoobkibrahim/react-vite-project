@@ -69,8 +69,4 @@ jobs:
         name: helm-package
         path: helm-packages/*.tgz
 
-    - name: Upload Build Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: react-vite-dist
-        path: dist
+
