@@ -1,3 +1,31 @@
+name: CD Pipeline
+
+on:
+  workflow_run:
+    workflows: ["CI Pipeline"]
+    types:
+      - completed
+
+jobs:
+  cd:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    uses: Ayookibrahim/react-cicd-templates/.github/workflows/reusable-cd.yml@main
+    with:
+      image_tag: build-${{ github.event.workflow_run.run_number }}
+      release_name: react-vite
+      chart_path: helm/react-app
+    secrets:
+      KUBECONFIG_DATA: ${{ secrets.KUBECONFIG_DATA }}
+
+
+
+
+
+
+
+
+
+
 # name: CD Pipeline
 
 # permissions:
@@ -49,21 +77,3 @@
 
 
 
-name: CD Pipeline
-
-on:
-  workflow_run:
-    workflows: ["CI Pipeline"]
-    types:
-      - completed
-
-jobs:
-  cd:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    uses: Ayookibrahim/react-cicd-templates/.github/workflows/reusable-cd.yml@main
-    with:
-      image_tag: build-${{ github.event.workflow_run.run_number }}
-      release_name: react-vite
-      chart_path: helm/react-app
-    secrets:
-      KUBECONFIG_DATA: ${{ secrets.KUBECONFIG_DATA }}
