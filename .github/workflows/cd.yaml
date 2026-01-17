@@ -2,6 +2,7 @@ name: CD Pipeline
 
 permissions:
   contents: read
+  actions: read
 
 on:
   workflow_run:
@@ -15,8 +16,6 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
       
       - name: Download Helm artifact
         uses: actions/download-artifact@v4
