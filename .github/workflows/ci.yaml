@@ -1,72 +1,91 @@
+# name: CI Pipeline
+
+# on: 
+#   push:
+#     branches: [main]
+#   pull_request:
+
+# jobs:
+#   build: 
+#     runs-on: self-hosted
+
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v4
+
+#     - name: Setup Node.js
+#       uses: actions/setup-node@v4
+#       with: 
+#         node-version: 20
+#         cache: npm
+    
+#     - name: Install dependencies
+#       run: npm ci 
+
+#     - name: Lint
+#       run: npm run lint
+    
+#     - name: Build Application
+#       run: npm run build
+
+#     - name: SonarCloud Scan
+#       uses: SonarSource/sonarcloud-github-action@v2
+#       env: 
+#         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#       with:
+#         args: >
+#           -Dsonar.organization=ayoob-org
+#           -Dsonar.projectKey=Ayoobkibrahim_react-vite-project
+#           -Dsonar.sources=src 
+#           -Dsonar.exclusions=**/node_modules/**,**/dist/**
+#           -Dsonar.qualitygate.wait=true
+
+#     - name: Docker Build verify 
+#       run: docker build -t react-vite-app .
+
+#     - name: Login to DockerHub
+#       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+#     - name: Build & Push Image 
+#       run: | 
+#         docker build -t ${{ secrets.DOCKER_USERNAME }}/react-vite-app:build-${{ github.run_number }} .
+#         docker push ${{ secrets.DOCKER_USERNAME }}/react-vite-app:build-${{ github.run_number }}
+
+#     - name: Setup Helm
+#       uses: azure/setup-helm@v4
+    
+#     - name:
+#       run: helm lint helm/react-vite
+    
+#     - name: Package Helm Chart
+#       run: |
+#         mkdir -p helm-packages
+#         helm dependency update helm/react-vite || true
+#         helm package helm/react-vite --destination helm-packages
+
+#     - name: Upload Helm Package
+#       uses: actions/upload-artifact@v4
+#       with:
+#         name: helm-package
+#         path: helm-packages/*.tgz
+
+
+
+
 name: CI Pipeline
 
-on: 
+on:
   push:
     branches: [main]
   pull_request:
 
 jobs:
-  build: 
-    runs-on: self-hosted
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with: 
-        node-version: 20
-        cache: npm
-    
-    - name: Install dependencies
-      run: npm ci 
-
-    - name: Lint
-      run: npm run lint
-    
-    - name: Build Application
-      run: npm run build
-
-    - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@v2
-      env: 
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      with:
-        args: >
-          -Dsonar.organization=ayoob-org
-          -Dsonar.projectKey=Ayoobkibrahim_react-vite-project
-          -Dsonar.sources=src 
-          -Dsonar.exclusions=**/node_modules/**,**/dist/**
-          -Dsonar.qualitygate.wait=true
-
-    - name: Docker Build verify 
-      run: docker build -t react-vite-app .
-
-    - name: Login to DockerHub
-      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-    - name: Build & Push Image 
-      run: | 
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/react-vite-app:build-${{ github.run_number }} .
-        docker push ${{ secrets.DOCKER_USERNAME }}/react-vite-app:build-${{ github.run_number }}
-
-    - name: Setup Helm
-      uses: azure/setup-helm@v4
-    
-    - name:
-      run: helm lint helm/react-vite
-    
-    - name: Package Helm Chart
-      run: |
-        mkdir -p helm-packages
-        helm dependency update helm/react-vite || true
-        helm package helm/react-vite --destination helm-packages
-
-    - name: Upload Helm Package
-      uses: actions/upload-artifact@v4
-      with:
-        name: helm-package
-        path: helm-packages/*.tgz
-
-
+  ci:
+    uses: ayoob-org/react-cicd-templates/.github/workflows/reusable-ci.yml@main
+    with:
+      app_path: app
+      image_name: react-vite-app
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
