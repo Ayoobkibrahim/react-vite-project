@@ -1,16 +1,67 @@
-# React + Vite
+# React Vite Project – CI/CD with GitHub Actions
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository contains a **React application built with Vite**, integrated with a **full Jenkins-like CI/CD pipeline** using **GitHub Actions reusable workflows**.  
+The project demonstrates an **end-to-end DevOps workflow** from code commit to Kubernetes deployment.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 CI/CD Overview
 
-## React Compiler
+The CI/CD pipeline automates the complete application lifecycle:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Code commit or pull request
+2. Continuous Integration (CI)
+3. Unit testing and code quality checks
+4. Docker image build and push
+5. Helm chart packaging
+6. Continuous Deployment (CD) to Kubernetes
 
-## Expanding the ESLint configuration
+All CI and CD logic is implemented using **reusable workflows** stored in a separate repository.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🔧 Technologies Used
+
+- React + Vite
+- GitHub Actions
+- Reusable Workflows (`workflow_call`)
+- SonarCloud
+- Docker & DockerHub
+- Kubernetes
+- Helm
+- Self-hosted GitHub Runner
+
+---
+
+## 🔁 CI Pipeline
+
+### Trigger
+- `push` to `main`
+- `pull_request`
+
+### CI Responsibilities
+- Checkout source code
+- Install dependencies
+- Run unit tests (Vitest)
+- Perform code quality analysis (SonarCloud Quality Gate)
+- Build and push Docker image
+- Lint and package Helm chart
+- Upload Helm artifacts
+
+The CI pipeline **calls a reusable workflow** from the `react-cicd-templates` repository.
+
+---
+
+## 🚢 CD Pipeline
+
+### Trigger
+- Automatically triggered after successful CI completion
+
+### CD Responsibilities
+- Download Helm artifacts from CI
+- Authenticate with Kubernetes cluster
+- Deploy application using Helm
+- Manage application releases
+
+The CD pipeline **calls a reusable workflow** from the `react-cicd-templates` repository.
+
