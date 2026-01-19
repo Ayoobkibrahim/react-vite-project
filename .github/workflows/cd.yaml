@@ -15,3 +15,4 @@ jobs:
       release_name: react-vite
     secrets:
       KUBECONFIG_DATA: ${{ secrets.KUBECONFIG_DATA }}
+
