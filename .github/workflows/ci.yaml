@@ -7,7 +7,7 @@ on:
 
 jobs:
   ci:
-    uses: Ayoobkibrahim/react-vite-project/.github/workflows/reusable-ci.yml@main
+    uses: Ayoobkibrahim/react-vite-project/.github/workflows/reusable-ci.yaml@main
     with:
       app_path: app
       image_name: react-vite-app
