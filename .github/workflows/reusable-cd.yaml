@@ -1,0 +1,43 @@
+name: Reusable CD Workflow
+
+on: 
+  workflow_call:
+    inputs:
+      release_name:
+        required: true
+        type: string
+    secrets:
+      KUBECONFIG_DATA:
+        required: true
+
+jobs: 
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Download Helm artifact
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+          name: helm-package
+          path: helm-packages
+      
+      - name: Setup Kubectl
+        uses: azure/setup-Kubectl@v3
+      
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+
+      - name: Configure kubeconfig
+        run: |
+          echo "${{ secrets.KUBECONFIG_DATA }}" | base64 -d > kubeconfig
+          echo "KUBECONFIG=$PWD/kubeconfig" >> $GITHUB_ENV
+      
+      - name: Verify cluster access
+        run: kubectl get nodes
+      
+      - name: Deploy with Helm
+        run: |
+          helm upgrade --install react-vite helm-packages/*.tgz \
+            --set image.tag=build-${{ github.event.workflow_run.run_number }}
